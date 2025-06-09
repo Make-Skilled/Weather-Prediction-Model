@@ -1,32 +1,32 @@
 {
     "temperature": {
-        "mean": 18.3,
-        "min": 18.3,
-        "max": 18.4,
+        "mean": 34.5,
+        "min": 34.5,
+        "max": 34.5,
         "std": 0.0
     },
     "humidity": {
-        "mean": 57.4,
-        "min": 57,
-        "max": 59,
-        "std": 0.9
+        "mean": 30.0,
+        "min": 30,
+        "max": 30,
+        "std": 0.0
     },
     "wind_speed": {
-        "mean": 13.9,
-        "min": 13.9,
-        "max": 13.9,
+        "mean": 7.6,
+        "min": 7.6,
+        "max": 7.6,
         "std": 0.0
     },
     "pressure": {
-        "mean": 1021.0,
-        "min": 1021,
-        "max": 1021,
+        "mean": 998.0,
+        "min": 998,
+        "max": 998,
         "std": 0.0
     },
     "weather_conditions": {
-        "overcast clouds": 5
+        "overcast clouds": 2
     },
-    "data_points": 5,
+    "data_points": 2,
     "date_range": {
         "start": "2025-06-09",
         "end": "2025-06-09"
