@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}WeatherAI - Dashboard{% endblock %}
+
+{% block content %}
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- City Selection -->
+    <div class="mb-8">
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-gray-900">Weather Dashboard</h2>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="city-input" placeholder="Enter city name" 
+                           class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="updateWeather()" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weather Summary Section -->
+    <div class="mb-8">
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Current Weather -->
+                <div class="text-center">
+                    <h3 class="text-lg font-medium text-gray-900">Current Weather</h3>
+                    <div class="mt-2 text-3xl font-bold text-blue-600" id="current-temp">--°C</div>
+                    <div class="text-sm text-gray-500" id="current-date">Loading...</div>
+                    <div class="mt-2" id="weather-icon"></div>
+                </div>
+                <!-- Feels Like -->
+                <div class="text-center">
+                    <h3 class="text-lg font-medium text-gray-900">Feels Like</h3>
+                    <div class="mt-2 text-3xl font-bold text-blue-600" id="feels-like">--°C</div>
+                    <div class="text-sm text-gray-500">Based on humidity and wind</div>
+                </div>
+                <!-- Weather Condition -->
+                <div class="text-center">
+                    <h3 class="text-lg font-medium text-gray-900">Condition</h3>
+                    <div class="mt-2 text-3xl font-bold text-blue-600" id="weather-condition">--</div>
+                    <div class="text-sm text-gray-500" id="condition-description">Loading...</div>
+                </div>
+                <!-- Last Updated -->
+                <div class="text-center">
+                    <h3 class="text-lg font-medium text-gray-900">Last Updated</h3>
+                    <div class="mt-2 text-3xl font-bold text-blue-600" id="last-updated">--:--</div>
+                    <div class="text-sm text-gray-500">Real-time data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prediction Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Temperature Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Temperature</dt>
+                            <dd class="text-2xl font-semibold text-gray-900" id="temperature">--°C</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Humidity Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Humidity</dt>
+                            <dd class="text-2xl font-semibold text-gray-900" id="humidity">--%</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wind Speed Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Wind Speed</dt>
+                            <dd class="text-2xl font-semibold text-gray-900" id="wind-speed">-- km/h</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pressure Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Pressure</dt>
+                            <dd class="text-2xl font-semibold text-gray-900" id="pressure">-- hPa</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forecast Section -->
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">5-Day Forecast</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" id="forecast-container">
+            <!-- Forecast cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Weather Alerts Section -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Weather Alerts</h3>
+        <div id="alerts-container" class="space-y-4">
+            <!-- Alerts will be dynamically added here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentCity = 'London';
+
+    // Update weather data
+    async function updateWeather() {
+        const cityInput = document.getElementById('city-input');
+        if (cityInput.value) {
+            currentCity = cityInput.value;
+        }
+        
+        try {
+            // Get current weather
+            const currentResponse = await fetch(`http://localhost:5000/api/weather/current?city=${currentCity}`);
+            const currentData = await currentResponse.json();
+            
+            if (currentData.status === 'success') {
+                updateCurrentWeather(currentData.data);
+            } else {
+                showError('Current Weather', currentData.message, currentData.error_type);
+            }
+            
+            // Get forecast
+            const forecastResponse = await fetch(`http://localhost:5000/api/weather/forecast?city=${currentCity}`);
+            const forecastData = await forecastResponse.json();
+            
+            if (forecastData.status === 'success') {
+                createForecastCards(forecastData.data);
+            } else {
+                showError('Forecast', forecastData.message, forecastData.error_type);
+            }
+            
+            // Get alerts
+            const alertsResponse = await fetch(`http://localhost:5000/api/weather/alerts?city=${currentCity}`);
+            const alertsData = await alertsResponse.json();
+            
+            if (alertsData.status === 'success') {
+                createWeatherAlerts(alertsData.data);
+            } else {
+                showError('Alerts', alertsData.message, alertsData.error_type);
+            }
+        } catch (error) {
+            console.error('Error updating weather:', error);
+            showError('Connection', 'Failed to connect to the weather service. Please try again later.', 'NETWORK_ERROR');
+        }
+    }
+
+    // Update current weather display
+    function updateCurrentWeather(data) {
+        document.getElementById('current-temp').textContent = `${data.temperature}°C`;
+        document.getElementById('feels-like').textContent = `${data.feels_like}°C`;
+        document.getElementById('temperature').textContent = `${data.temperature}°C`;
+        document.getElementById('humidity').textContent = `${data.humidity}%`;
+        document.getElementById('wind-speed').textContent = `${data.wind_speed} km/h`;
+        document.getElementById('pressure').textContent = `${data.pressure} hPa`;
+        document.getElementById('weather-condition').textContent = data.description;
+        document.getElementById('last-updated').textContent = data.timestamp;
+        
+        // Update weather icon
+        const iconUrl = `http://openweathermap.org/img/wn/${data.icon}@2x.png`;
+        document.getElementById('weather-icon').innerHTML = `<img src="${iconUrl}" alt="${data.description}">`;
+    }
+
+    // Create forecast cards
+    function createForecastCards(forecastData) {
+        const container = document.getElementById('forecast-container');
+        container.innerHTML = '';
+
+        forecastData.forEach(day => {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-50 rounded-lg p-4 text-center';
+            card.innerHTML = `
+                <div class="text-sm font-medium text-gray-500">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                <div class="mt-2">
+                    <img src="http://openweathermap.org/img/wn/${day.icon}@2x.png" alt="${day.description}" class="mx-auto">
+                </div>
+                <div class="mt-2 text-2xl font-bold text-blue-600">${day.temperature}°C</div>
+                <div class="text-sm text-gray-500">Humidity: ${day.humidity}%</div>
+                <div class="text-sm text-gray-500">Wind: ${day.wind_speed} km/h</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Create weather alerts
+    function createWeatherAlerts(alerts) {
+        const container = document.getElementById('alerts-container');
+        container.innerHTML = '';
+
+        alerts.forEach(alert => {
+            const alertElement = document.createElement('div');
+            alertElement.className = `p-4 rounded-md ${
+                alert.type === 'warning' ? 'bg-yellow-50 text-yellow-700' :
+                alert.type === 'info' ? 'bg-blue-50 text-blue-700' :
+                'bg-green-50 text-green-700'
+            }`;
+            alertElement.innerHTML = `
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium">${alert.message}</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(alertElement);
+        });
+    }
+
+    // Show error message
+    function showError(section, message, errorType) {
+        let errorMessage = `Error loading ${section}: ${message}`;
+        let helpMessage = '';
+        
+        // Add specific help messages based on error type
+        if (errorType === 'API_KEY_MISSING' || errorType === 'API_KEY_INVALID') {
+            helpMessage = `
+                <div class="mt-2 text-sm">
+                    <p>To fix this:</p>
+                    <ol class="list-decimal list-inside mt-1">
+                        <li>Go to <a href="https://openweathermap.org/" target="_blank" class="text-blue-600 hover:text-blue-800">OpenWeather</a> and sign up for a free account</li>
+                        <li>Get your API key from your account dashboard</li>
+                        <li>Create a .env file in the project root with:</li>
+                        <pre class="mt-1 p-2 bg-gray-100 rounded text-xs">OPENWEATHER_API_KEY=your_api_key_here</pre>
+                        <li>Restart the Flask server</li>
+                    </ol>
+                </div>
+            `;
+        }
+        
+        console.error(errorMessage);
+        
+        // Create error alert
+        const alertElement = document.createElement('div');
+        alertElement.className = 'p-4 rounded-md bg-red-50 text-red-700';
+        alertElement.innerHTML = `
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium">${errorMessage}</p>
+                    ${helpMessage}
+                </div>
+            </div>
+        `;
+        
+        // Add error to alerts container
+        const alertsContainer = document.getElementById('alerts-container');
+        alertsContainer.innerHTML = ''; // Clear existing alerts
+        alertsContainer.appendChild(alertElement);
+    }
+
+    // Initialize the dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+        updateWeather();
+        // Update weather every 5 minutes
+        setInterval(updateWeather, 300000);
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,6 @@
+timestamp,city,temperature,feels_like,humidity,pressure,wind_speed,description,icon
+2025-06-09 17:21:05,London,18.3,17.6,57,1021,13.9,overcast clouds,04d
+2025-06-09 17:24:02,London,18.3,17.7,57,1021,13.9,overcast clouds,04d
+2025-06-09 17:25:55,London,18.3,17.7,57,1021,13.9,overcast clouds,04d
+2025-06-09 17:27:53,London,18.3,17.7,57,1021,13.9,overcast clouds,04d
+2025-06-09 17:46:10,London,18.4,17.8,59,1021,13.9,overcast clouds,04d
